@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Анна Тёшкина](https://up.htmlacademy.ru/php/9/user/305561).
-* Наставник: `Неизвестно`.
+* Наставник: [Денис Байдаров](https://htmlacademy.ru/profile/4er).
 
 ---
 
