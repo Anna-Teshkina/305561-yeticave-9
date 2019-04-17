@@ -44,7 +44,7 @@ $ad = [
 
 function editNumber($number) {
 	$number = ceil($number);
-	if ($number > 1000) $number = number_format($number, 0, ',', ' ');
+	$number = number_format($number, 0, ',', ' ');
 	//$number.= ' ₽';
 	return $number;
 } ?>
