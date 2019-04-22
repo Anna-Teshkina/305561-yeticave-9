@@ -32,8 +32,12 @@
                             <span class="lot__amount"> Стартовая цена </span>
                             <span class="lot__cost"> <?=htmlspecialchars(editNumber($lot['price']))?> <!--b class="rub">р</b--></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <? $timer_finishing = '';
+                        if (strtotime($time_left .' 01.01.1970') <= 3600) {
+                            $timer_finishing = 'timer--finishing';
+                        } ?>
+                        <div class="lot__timer timer <?=$timer_finishing ?>">
+                            <?=$time_left?>
                         </div>
                     </div>
                 </div>

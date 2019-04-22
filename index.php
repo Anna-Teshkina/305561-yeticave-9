@@ -1,11 +1,14 @@
 <?php
+date_default_timezone_get("Europe/Moscow");
+
 require_once('helpers.php'); // подключаем модуль со вспомогательными функциями
 require_once('data.php'); // подключаем модуль с переменными
 require_once('functions.php'); // подключаем модуль с функциями
 
 $page_content = include_template('index.php', [
     'equipment_type' => $equipment_type,
-    'ad' => $ad
+    'ad' => $ad,
+    'time_left' => time_left()
 ]);
 
 $layout_content = include_template('layout.php', [

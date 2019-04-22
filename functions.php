@@ -6,3 +6,11 @@ function editNumber($number) {
 	$number.= ' ₽';
 	return $number;
 }
+
+function time_left() {
+	$time_left_unix = strtotime("tomorrow midnight") - time();
+	$time_left = gmdate('H:i', $time_left_unix);
+	//print("Осталось времени: $time_left <br>");
+
+	return $time_left;
+}
