@@ -1,4 +1,4 @@
-<? 
+<?php 
 // функция форматирования числа
 function editNumber($number) {
 	$number = ceil($number);
