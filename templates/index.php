@@ -32,11 +32,7 @@
                             <span class="lot__amount"> Стартовая цена </span>
                             <span class="lot__cost"> <?=htmlspecialchars(editNumber($lot['price']))?> <!--b class="rub">р</b--></span>
                         </div>
-                        <? $timer_finishing = '';
-                        if (time_class("tomorrow midnight")) {
-                            $timer_finishing = 'timer--finishing';
-                        } ?>
-                        <div class="lot__timer timer <?=$timer_finishing ?>">
+                        <div class="lot__timer timer <?if (is_timer_finishing("tomorrow midnight")) { print("timer--finishing"); }?>">
                             <?=time_left("tomorrow midnight");?>
                         </div>
                     </div>

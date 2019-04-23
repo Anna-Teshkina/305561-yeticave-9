@@ -15,12 +15,11 @@ function time_left($finish_time) {
 	return $time_left;
 }
 
-function time_class($finish_time) {
+function is_timer_finishing($finish_time) {
 	$time_left_unix = strtotime($finish_time) - time();
-	//print("Осталось времени: $time_left_unix <br>");
+	$flag = 0;
 	if ($time_left_unix <= 3600) {
-		return true;
-	} else {
-		return false;
+		$flag = 1;
 	}
+	return $flag;
 }
