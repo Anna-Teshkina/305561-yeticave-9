@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_get("Europe/Moscow");
+
 require_once('helpers.php'); // подключаем модуль со вспомогательными функциями
 require_once('data.php'); // подключаем модуль с переменными
 require_once('functions.php'); // подключаем модуль с функциями
