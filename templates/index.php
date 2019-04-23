@@ -33,11 +33,11 @@
                             <span class="lot__cost"> <?=htmlspecialchars(editNumber($lot['price']))?> <!--b class="rub">р</b--></span>
                         </div>
                         <? $timer_finishing = '';
-                        if (strtotime($time_left .' 01.01.1970') <= 3600) {
+                        if (time_class("tomorrow midnight")) {
                             $timer_finishing = 'timer--finishing';
                         } ?>
                         <div class="lot__timer timer <?=$timer_finishing ?>">
-                            <?=$time_left?>
+                            <?=time_left("tomorrow midnight");?>
                         </div>
                     </div>
                 </div>

@@ -7,8 +7,7 @@ require_once('functions.php'); // подключаем модуль с функ�
 
 $page_content = include_template('index.php', [
     'equipment_type' => $equipment_type,
-    'ad' => $ad,
-    'time_left' => time_left()
+    'ad' => $ad
 ]);
 
 $layout_content = include_template('layout.php', [
