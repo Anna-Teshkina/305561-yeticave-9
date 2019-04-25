@@ -5,9 +5,13 @@ CREATE DATABASE yeticave
 USE yeticave;
 
 CREATE TABLE user (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    email       CHAR(128) UNIQUE NOT NULL,
-    password    CHAR(64) NOT NULL
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    registration_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    email               CHAR(128) UNIQUE NOT NULL,
+    name                CHAR(150) NOT NULL,
+    password            CHAR(64) NOT NULL,
+    avatar              CHAR(255),
+    contacts            TEXT
 );
 
 CREATE TABLE category (
