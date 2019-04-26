@@ -7,28 +7,28 @@ USE yeticave;
 CREATE TABLE user (
     id                  INT AUTO_INCREMENT PRIMARY KEY,
     registration_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    email               CHAR(128) UNIQUE NOT NULL,
-    name                CHAR(150) NOT NULL,
+    email               VARCHAR(128) UNIQUE NOT NULL,
+    name                VARCHAR(150) NOT NULL,
     password            CHAR(64) NOT NULL,
-    avatar              CHAR(255),
+    avatar              VARCHAR(255),
     contacts            TEXT
 );
 
 CREATE TABLE category (
     id      INT AUTO_INCREMENT PRIMARY KEY,
-    name    CHAR(100),
+    name    VARCHAR(100),
     code    CHAR(50)
 );
 
 CREATE TABLE lot (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     date_start  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    name        CHAR(100),
+    name        VARCHAR(100),
     description TEXT,
-    img         CHAR(255),
-    price_start INT(8),
+    img         VARCHAR(255),
+    price_start INT,
     date_end    TIMESTAMP,
-    bet_step    CHAR(6),
+    bet_step    INT,
     author_id   INT,
     winner_id   INT,
     category_id INT
@@ -36,8 +36,9 @@ CREATE TABLE lot (
 
 CREATE TABLE bet (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id    INT,
-    lot_id     INT
+    date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id     INT,
+    user_price  INT,
+    lot_id      INT
 );
 
