@@ -23,7 +23,7 @@ if ($con == false) {
     // 1 -----------------------------------------------------------------------------------
     // формируем запрос для получения списка новых лотов
     // --------------------------------------------------------------------------------------
-    $sql_lot = "SELECT lot_name, price_start, img, category_id, bet.user_price, category.category_name FROM lot
+    $sql_lot = "SELECT lot_name, price_start, img, date_end, category_id, bet.user_price, category.category_name FROM lot
     JOIN bet
     ON lot.id = bet.lot_id
     JOIN category

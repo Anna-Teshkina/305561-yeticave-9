@@ -20,6 +20,7 @@
         <!--заполните этот список из массива с товарами-->
         
         <?php foreach ($ad as $lot): ?>
+        <?php print_r($lot);?>
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="<?=htmlspecialchars($lot['img']);?>" width="350" height="260" alt="">
@@ -32,9 +33,8 @@
                             <span class="lot__amount"> <?=htmlspecialchars(editNumber($lot['price_start']))?> </span>
                             <span class="lot__cost"> <?=htmlspecialchars(editNumber($lot['user_price']))?> <!--b class="rub">р</b--></span>
                         </div>
-                        <div class="lot__timer timer <?if (is_timer_finishing("tomorrow midnight")) { print("timer--finishing"); }?>">
-                            
-                            <?=time_left("tomorrow midnight");?>
+                        <div class="lot__timer timer <?if (is_timer_finishing($lot['date_end'])) { print("timer--finishing"); }?>">
+                            <?=time_left($lot['date_end']);?>
                         </div>
                     </div>
                 </div>
