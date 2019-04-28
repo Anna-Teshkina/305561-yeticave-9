@@ -1,5 +1,5 @@
 INSERT INTO category
-(name, img_key) VALUES 
+(category_name, img_key) VALUES 
     ('Доски и лыжи','boards'),
     ('Крепления','attachment'),
     ('Ботинки','boots'),
@@ -13,7 +13,7 @@ INSERT INTO user
     ('26.04.2019','elenka1@yandex.ru','Лена Рылеева','elenka','img/avatar-02.jpg','ул. Березовая 7, корп.4, кв. 43');
 
 INSERT INTO lot
-(name, category_id, price_start, img, date_start, date_end, author_id) VALUES
+(lot_name, category_id, price_start, img, date_start, date_end, author_id) VALUES
     ('2014 Rossignol District Snowboard',1,10999,'img/lot-1.jpg','2019-01-01','2019-09-01', 1),
     ('DC Ply Mens 2016/2017 Snowboard',1,159999,'img/lot-2.jpg','2019-02-01','2019-04-20', 1),
     ('Крепления Union Contact Pro 2015 года размер L/XL',2,8000,'img/lot-3.jpg','2019-03-12','2019-04-13', 1),
@@ -37,7 +37,7 @@ ORDER BY lot.date_start DESC
 LIMIT 20;
 
 // Запрос-3::показать лот по его id. Получите также название категории, к которой принадлежит лот;
-SELECT lot.*, category.name FROM lot
+SELECT lot.*, category.category_name FROM lot
 JOIN category ON lot.category_id = category.id
 WHERE lot.id='1';
 
