@@ -6,7 +6,7 @@
         <?php foreach ($equipment_type as $category): ?>
             <!--заполните этот список из массива категорий-->
             <li class="promo__item promo__item--<?=$category['img_key']?>">
-                <a class="promo__link" href="pages/all-lots.html"> <?=$category['category_name']?> </a>
+                <a class="promo__link" href="pages/all-lots.html"> <?=$category['name']?> </a>
             </li>
         <?php endforeach; ?>
         
@@ -20,13 +20,12 @@
         <!--заполните этот список из массива с товарами-->
         
         <?php foreach ($ad as $lot): ?>
-        <?php print_r($lot);?>
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="<?=htmlspecialchars($lot['img']);?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"> <?=$lot['category_name'];?> </span>
+                    <span class="lot__category"> <?=$lot['cat_name'];?> </span>
                     <h3 class="lot__title"><a class="text-link" href="pages/lot.html"> <?=htmlspecialchars($lot['lot_name']);?> </a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">

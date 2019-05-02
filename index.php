@@ -7,10 +7,11 @@ require_once('functions.php'); // подключаем модуль с функ�
 
 //выполним подключение к базе данных
 $con = mysqli_connect("localhost", "root", "","yeticave");
-if ($con == false) {
-    print("Ошибка подключения: " . mysqli_connect_error());
+if (!$con == true) {
+    //print("Ошибка подключения: " . mysqli_connect_error());
+    exit();
 } else {
-    // print("Соединение установлено");
+    //print("Соединение установлено");
 
     // устанавливаем кодировку utf8
     mysqli_set_charset($con, "utf8");
@@ -23,16 +24,8 @@ if ($con == false) {
     // 1 -----------------------------------------------------------------------------------
     // формируем запрос для получения списка новых лотов
     // --------------------------------------------------------------------------------------
-    $sql_lot = "SELECT lot_name, price_start, img, date_end, category_id, bet.user_price, category.category_name FROM lot
-    JOIN bet
-    ON lot.id = bet.lot_id
-    JOIN category
-    ON lot.category_id = category.id
-    WHERE CURRENT_TIMESTAMP < lot.date_end 
-    ORDER BY lot.date_start DESC 
-    LIMIT 20;";
+    $sql_lot = lot_list('lot.name as lot_name, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name', 'lot.date_start DESC', 20);
     $ad = get_array($con, $sql_lot);
-
 
     // 2 -----------------------------------------------------------------------------------
     // формируем запрос для получения списка категорий

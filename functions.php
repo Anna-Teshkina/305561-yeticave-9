@@ -34,10 +34,23 @@ function get_array($database, $query) {
     $result = mysqli_query($database, $query);
     // если запрос на чтение не успешен - возвращаем последнюю ошибку выполнения запроса
     if (!$result) {
-        $error = mysqli_error($con);
+        $error = mysqli_error($database);
         print("Ошибка MySQL: " . $error);
 	}
 	// в полученном ресурсе результата преобразуем полученные данные в массив
 	$array = mysqli_fetch_all($result, MYSQLI_ASSOC);
 	return $array;
+}
+
+//формируем запрос для получения списка новых лотов
+function lot_list($parameters, $order_by, $limit) {
+	$sql_lot = "SELECT $parameters FROM lot
+	JOIN bet
+	ON lot.id = bet.lot_id
+	JOIN category
+	ON lot.category_id = category.id
+	WHERE CURRENT_TIMESTAMP < lot.date_end 
+	ORDER BY $order_by 
+	LIMIT $limit;";
+	return $sql_lot;
 }

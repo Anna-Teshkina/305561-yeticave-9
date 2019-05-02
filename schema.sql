@@ -16,14 +16,14 @@ CREATE TABLE user (
 
 CREATE TABLE category (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    category_name   VARCHAR(100),
+    name            VARCHAR(100),
     img_key         CHAR(50)
 );
 
 CREATE TABLE lot (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     date_start  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    lot_name    VARCHAR(100),
+    name        VARCHAR(100),
     description TEXT,
     img         VARCHAR(255),
     price_start INT,
