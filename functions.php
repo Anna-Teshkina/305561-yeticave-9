@@ -43,8 +43,8 @@ function get_array($database, $query) {
 }
 
 //формируем запрос для получения списка новых лотов
-function lot_list($parameters, $order_by, $limit) {
-	$sql_lot = "SELECT $parameters FROM lot
+function lot_list($database, $order_by, $limit) {
+	$sql_lot = "SELECT lot.name as lot_name, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
 	JOIN bet
 	ON lot.id = bet.lot_id
 	JOIN category
@@ -52,5 +52,7 @@ function lot_list($parameters, $order_by, $limit) {
 	WHERE CURRENT_TIMESTAMP < lot.date_end 
 	ORDER BY $order_by 
 	LIMIT $limit;";
+
+	$sql_lot = get_array($database, $sql_lot);
 	return $sql_lot;
 }
