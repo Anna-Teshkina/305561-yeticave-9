@@ -15,9 +15,9 @@ CREATE TABLE user (
 );
 
 CREATE TABLE category (
-    id      INT AUTO_INCREMENT PRIMARY KEY,
-    name    VARCHAR(100),
-    img_key    CHAR(50)
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    name            VARCHAR(100),
+    img_key         CHAR(50)
 );
 
 CREATE TABLE lot (

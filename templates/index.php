@@ -3,10 +3,10 @@
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
     <ul class="promo__list">
         
-        <?php foreach ($equipment_type as $index): ?>
+        <?php foreach ($equipment_type as $category): ?>
             <!--заполните этот список из массива категорий-->
-            <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"> <?=$index?> </a>
+            <li class="promo__item promo__item--<?=$category['img_key']?>">
+                <a class="promo__link" href="pages/all-lots.html"> <?=$category['name']?> </a>
             </li>
         <?php endforeach; ?>
         
@@ -22,18 +22,18 @@
         <?php foreach ($ad as $lot): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="<?=htmlspecialchars($lot['url_img']);?>" width="350" height="260" alt="">
+                    <img src="<?=htmlspecialchars($lot['img']);?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"> <?=$lot['category'];?> </span>
-                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"> <?=htmlspecialchars($lot['name']);?> </a></h3>
+                    <span class="lot__category"> <?=$lot['cat_name'];?> </span>
+                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"> <?=htmlspecialchars($lot['lot_name']);?> </a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
-                            <span class="lot__amount"> Стартовая цена </span>
-                            <span class="lot__cost"> <?=htmlspecialchars(editNumber($lot['price']))?> <!--b class="rub">р</b--></span>
+                            <span class="lot__amount"> <?=htmlspecialchars(get_editNumber($lot['price_start']))?> </span>
+                            <span class="lot__cost"> <?=htmlspecialchars(get_editNumber($lot['user_price']))?> <!--b class="rub">р</b--></span>
                         </div>
-                        <div class="lot__timer timer <?if (is_timer_finishing("tomorrow midnight")) { print("timer--finishing"); }?>">
-                            <?=time_left("tomorrow midnight");?>
+                        <div class="lot__timer timer <?if (is_timer_finishing($lot['date_end'])) { print("timer--finishing"); }?>">
+                            <?=get_time_left($lot['date_end']);?>
                         </div>
                     </div>
                 </div>
