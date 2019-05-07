@@ -37,7 +37,7 @@ ORDER BY lot.date_start DESC
 LIMIT 20;
 
 // Запрос-3::показать лот по его id. Получите также название категории, к которой принадлежит лот;
-SELECT lot.*, category.category_name FROM lot
+SELECT lot.*, category.name FROM lot
 JOIN category ON lot.category_id = category.id
 WHERE lot.id='1';
 

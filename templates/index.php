@@ -29,11 +29,11 @@
                     <h3 class="lot__title"><a class="text-link" href="pages/lot.html"> <?=htmlspecialchars($lot['lot_name']);?> </a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
-                            <span class="lot__amount"> <?=htmlspecialchars(editNumber($lot['price_start']))?> </span>
-                            <span class="lot__cost"> <?=htmlspecialchars(editNumber($lot['user_price']))?> <!--b class="rub">р</b--></span>
+                            <span class="lot__amount"> <?=htmlspecialchars(get_editNumber($lot['price_start']))?> </span>
+                            <span class="lot__cost"> <?=htmlspecialchars(get_editNumber($lot['user_price']))?> <!--b class="rub">р</b--></span>
                         </div>
                         <div class="lot__timer timer <?if (is_timer_finishing($lot['date_end'])) { print("timer--finishing"); }?>">
-                            <?=time_left($lot['date_end']);?>
+                            <?=get_time_left($lot['date_end']);?>
                         </div>
                     </div>
                 </div>
