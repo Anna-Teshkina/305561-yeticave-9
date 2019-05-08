@@ -137,7 +137,6 @@ function get_lot_list($database, $order_by = "lot.date_start DESC", $limit = 20)
 	WHERE lot.id = $id";
 
 	$current_lot = get_array($database, $sql_lot);
-	$current_lot = $current_lot[0];
 	return $current_lot;
 }
 

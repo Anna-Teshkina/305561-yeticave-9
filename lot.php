@@ -42,6 +42,7 @@ if (empty($ad)) {
         'equipment_type' => $equipment_type
     ]);
 } else {
+    $ad = $ad[0];
     $page_content = include_template('lot.php', [
         'equipment_type' => $equipment_type,
         'ad' => $ad,
