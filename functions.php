@@ -5,12 +5,12 @@
   * @param int $number исходное число
   * @return string $number строка, которая состоит из отформатированного исходного числа с добавлением знака рубля
   */
-function get_editNumber($number) {
-	$number = ceil($number);
-	$number = number_format($number, 0, ',', ' ');
-	$number.= ' ₽';
-	return $number;
-}
+  function get_editNumber($number) {
+    $number = ceil($number);
+    $number = number_format($number, 0, ',', ' ');
+    $number.= ' ₽';
+    return $number;
+  }
 
 /**
   * функция форматирования даты
@@ -19,21 +19,19 @@ function get_editNumber($number) {
   * @return timestamp $date дата в корректном формате
   */
   function get_editDate($date) {
-	$date_unix = strtotime($date);
-	//print("date_unix: $date_unix <br>");
-	$date_left_unix = time() - strtotime($date);
-	//$now_unix = time();
-	//$now = gmdate('d.m.y H:i', $now_unix);
-	//print("date_left_unix: $date_left_unix <br>");
-	//print("now: $now <br>");
-	if ($date_left_unix < 3600) {
-		$date = gmdate('i ', $date_left_unix).get_noun_plural_form(gmdate('i', $date_left_unix),'минуту','минуты','минут').' назад';
-	} else {
-		$date = gmdate('d.m.y в H:i', $date_unix);
-	}
-
-	return $date;
-}
+    $date_unix = strtotime($date);
+    //print("date_unix: $date_unix <br>");
+    $date_left_unix = time() - strtotime($date);
+    //$now_unix = time();
+    //print("now_unix: ".date('d.m.y в H:i', $now_unix)."<br>");
+    //print("date_left_unix: $date_left_unix <br>");
+    if ($date_left_unix < 3600) {
+      $date = date('i ', $date_left_unix).get_noun_plural_form(gmdate('i', $date_left_unix),'минуту','минуты','минут').' назад';
+    } else {
+      $date = date('d.m.y в H:i', $date_unix);
+    }
+    return $date;
+  }
 
 /**
   * функция которая отображает сколько времени осталось до конца торгов
@@ -41,13 +39,13 @@ function get_editNumber($number) {
   * @param timestamp $finish_time время окончания торгов
   * @return timestamp $time_left сколько времени осталось до конца торгов
   */
-function get_time_left($finish_time) {
-	$time_left_unix = strtotime($finish_time) - time();
-	$time_left = gmdate('H:i', $time_left_unix);
-	//print("Осталось времени: $time_left <br>");
+  function get_time_left($finish_time) {
+    $time_left_unix = strtotime($finish_time) - time();
+    $time_left = gmdate('H:i', $time_left_unix);
+    //print("Осталось времени: $time_left <br>");
 
-	return $time_left;
-}
+    return $time_left;
+  }
 
 /**
   * в случае, если до конца торгов осталось меньше часа
@@ -56,14 +54,14 @@ function get_time_left($finish_time) {
   * @param timestamp $finish_time время окончания торгов
   * @return bool $flag
   */
-function is_timer_finishing($finish_time) {
-	$time_left_unix = strtotime($finish_time) - time();
-	$flag = 0;
-	if ($time_left_unix <= 3600) {
-		$flag = 1;
-	}
-	return $flag;
-}
+  function is_timer_finishing($finish_time) {
+    $time_left_unix = strtotime($finish_time) - time();
+    $flag = 0;
+    if ($time_left_unix <= 3600) {
+      $flag = 1;
+    }
+    return $flag;
+  }
 
 /**
   * функция отправляет запрос на чтение в базу данных и 
@@ -73,18 +71,43 @@ function is_timer_finishing($finish_time) {
   * @param string $query запрос
   * @return array  $array
   */
-function get_array($database, $query) {
-	/** отправляем запрос на чтение данных */
+  function get_array($database, $query) {
+    /** отправляем запрос на чтение данных */
     $result = mysqli_query($database, $query);
+    
     /** если запрос на чтение не успешен - возвращаем последнюю ошибку выполнения запроса */
     if (!$result) {
-        $error = mysqli_error($database);
-        print("Ошибка MySQL: " . $error);
-	}
-	/** в полученном ресурсе результата преобразуем полученные данные в массив */
-	$array = mysqli_fetch_all($result, MYSQLI_ASSOC);
-	return $array;
-}
+      $error = mysqli_error($database);
+      print("Ошибка MySQL: " . $error);
+    }
+    
+    /** в полученном ресурсе результата преобразуем полученные данные в массив */
+    $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $array;
+  }
+
+/**
+  * функция отправляет запрос на чтение в базу данных и 
+  * возвращает строку результата
+  *
+  * @param bool $database подключение к базе данных
+  * @param string $query запрос
+  * @return string $result строка результата
+  */
+  function get_string($database, $query) {
+    /** отправляем запрос на чтение данных */
+    $result = mysqli_query($database, $query);
+    
+    /** если запрос на чтение не успешен - возвращаем последнюю ошибку выполнения запроса */
+    if (!$result) {
+      $error = mysqli_error($database);
+      print("Ошибка MySQL: " . $error);
+    }
+    
+    /** в полученном ресурсе результата преобразуем полученные данные в массив */
+    $string = mysqli_fetch_assoc($result);
+    return $string;
+  }
 
 /**
   * формируем запрос для получения списка новых лотов
@@ -94,19 +117,19 @@ function get_array($database, $query) {
   * @param string $limit ограничение на кол-во выводимых записей
   * @return array $sql_lot массив новых лотов
   */
-function get_lot_list($database, $order_by = "lot.date_start DESC", $limit = 20) {
-	$sql_lot = "SELECT lot.id, lot.name as lot_name, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
-	JOIN bet
-	ON lot.id = bet.lot_id
-	JOIN category
-	ON lot.category_id = category.id
-	WHERE CURRENT_TIMESTAMP < lot.date_end 
-	ORDER BY $order_by 
-	LIMIT $limit;";
+  function get_lot_list($database, $order_by = "lot.date_start DESC", $limit = 20) {
+    $sql_lot = "SELECT lot.id, lot.name as lot_name, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
+    JOIN bet
+    ON lot.id = bet.lot_id
+    JOIN category
+    ON lot.category_id = category.id
+    WHERE CURRENT_TIMESTAMP < lot.date_end 
+    ORDER BY $order_by 
+    LIMIT $limit;";
 
-	$sql_lot = get_array($database, $sql_lot);
-	return $sql_lot;
-}
+    $sql_lot = get_array($database, $sql_lot);
+    return $sql_lot;
+  }
 
 /**
   * формируем запрос для получения списка новых лотов
@@ -115,30 +138,28 @@ function get_lot_list($database, $order_by = "lot.date_start DESC", $limit = 20)
   * @return array $sql_category массив новых лотов
   */
   function get_category_list($database) {
-	$sql_category = "SELECT * FROM category";
-	$sql_category = get_array($database, $sql_category);
-	return $sql_category;
-}
+    $sql_category = "SELECT * FROM category";
+    $sql_category = get_array($database, $sql_category);
+    return $sql_category;
+  }
 
 /**
   * формируем запрос для получения информации о текущем лоте
   *
   * @param bool $database подключение к базе данных
-  * @return array $current_lot текущий лот
+  * @return string $current_lot текущий лот
   */
-  function get_current_lot($database) {
-	$id = mysqli_real_escape_string($database, $_GET['id']);
+  function get_current_lot($database, $id) {
+    $sql_lot = "SELECT lot.id, lot.name as lot_name, lot.description, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
+    JOIN bet
+    ON lot.id = bet.lot_id
+    JOIN category
+    ON lot.category_id = category.id
+    WHERE lot.id = $id";
 
-	$sql_lot = "SELECT lot.id, lot.name as lot_name, lot.description, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
-	JOIN bet
-	ON lot.id = bet.lot_id
-	JOIN category
-	ON lot.category_id = category.id
-	WHERE lot.id = $id";
-
-	$current_lot = get_array($database, $sql_lot);
-	return $current_lot;
-}
+    $current_lot = get_string($database, $sql_lot);
+    return $current_lot;
+  }
 
 /**
   * формируем запрос для получения информации о текущем лоте
@@ -146,14 +167,31 @@ function get_lot_list($database, $order_by = "lot.date_start DESC", $limit = 20)
   * @param bool $database подключение к базе данных
   * @return array $bets масси ставок для текущего лота
   */
-  function get_current_bets($database) {
-	$id = mysqli_real_escape_string($database, $_GET['id']);
+  function get_current_bets($database, $id) {
+    $sql_bet = "SELECT bet.*, user.name as user_name FROM bet
+      JOIN user
+      ON user.id = bet.user_id
+      WHERE lot_id = $id";
 
-	$sql_bet = "SELECT bet.*, user.name as user_name FROM bet
-    JOIN user
-    ON user.id = bet.user_id
-    WHERE lot_id = $id";
+    $bets = get_array($database, $sql_bet);
+    return $bets;
+  }
 
-	$bets = get_array($database, $sql_bet);
-	return $bets;
+/**
+  * кол-во ставок для каждого лота
+  *
+  * @param bool $database подключение к базе данных
+  * @return array $bets масси ставок для текущего лота
+  */
+  function get_col_bets($database, $id) {
+    $sql_bet = "SELECT bet.*, user.name as user_name FROM bet
+      JOIN user
+      ON user.id = bet.user_id
+      WHERE lot_id = $id";
+    
+    /** отправляем запрос на чтение данных */
+    $request = mysqli_query($database, $sql_bet);
+
+    $col_bets = mysqli_num_rows($request);
+    return $col_bets;
   }
