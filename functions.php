@@ -26,7 +26,7 @@
     //print("now_unix: ".date('d.m.y в H:i', $now_unix)."<br>");
     //print("date_left_unix: $date_left_unix <br>");
     if ($date_left_unix < 3600) {
-      $date = date('i ', $date_left_unix).get_noun_plural_form(gmdate('i', $date_left_unix),'минуту','минуты','минут').' назад';
+      $date = date('i ', $date_left_unix).get_noun_plural_form(date('i', $date_left_unix),'минуту','минуты','минут').' назад';
     } else {
       $date = date('d.m.y в H:i', $date_unix);
     }
@@ -65,48 +65,31 @@
 
 /**
   * функция отправляет запрос на чтение в базу данных и 
-  * преобразует полученные данные в массив
+  * преобразует полученные данные
   *
   * @param bool $database подключение к базе данных
   * @param string $query запрос
-  * @return array  $array
+  * @param bool $flag (1 - преобразует полученные данные в массив, 0 - преобразует полученные данные в строку)
+  * @return array/string $result
   */
-  function get_array($database, $query) {
+  function get_result($database, $query, $flag) {
     /** отправляем запрос на чтение данных */
-    $result = mysqli_query($database, $query);
+    $request = mysqli_query($database, $query);
     
     /** если запрос на чтение не успешен - возвращаем последнюю ошибку выполнения запроса */
-    if (!$result) {
+    if (!$request) {
       $error = mysqli_error($database);
       print("Ошибка MySQL: " . $error);
     }
     
-    /** в полученном ресурсе результата преобразуем полученные данные в массив */
-    $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    return $array;
-  }
-
-/**
-  * функция отправляет запрос на чтение в базу данных и 
-  * возвращает строку результата
-  *
-  * @param bool $database подключение к базе данных
-  * @param string $query запрос
-  * @return string $result строка результата
-  */
-  function get_string($database, $query) {
-    /** отправляем запрос на чтение данных */
-    $result = mysqli_query($database, $query);
-    
-    /** если запрос на чтение не успешен - возвращаем последнюю ошибку выполнения запроса */
-    if (!$result) {
-      $error = mysqli_error($database);
-      print("Ошибка MySQL: " . $error);
+    if ($flag) {
+      /** в полученном ресурсе результата преобразуем полученные данные в массив */
+      $result = mysqli_fetch_all($request, MYSQLI_ASSOC);
+    } else {
+      /** в полученном ресурсе результата преобразуем полученные данные в строку */
+      $result = mysqli_fetch_assoc($request);
     }
-    
-    /** в полученном ресурсе результата преобразуем полученные данные в массив */
-    $string = mysqli_fetch_assoc($result);
-    return $string;
+    return $result;
   }
 
 /**
@@ -127,7 +110,7 @@
     ORDER BY $order_by 
     LIMIT $limit;";
 
-    $sql_lot = get_array($database, $sql_lot);
+    $sql_lot = get_result($database, $sql_lot,1);
     return $sql_lot;
   }
 
@@ -139,7 +122,7 @@
   */
   function get_category_list($database) {
     $sql_category = "SELECT * FROM category";
-    $sql_category = get_array($database, $sql_category);
+    $sql_category = get_result($database, $sql_category,1);
     return $sql_category;
   }
 
@@ -157,7 +140,7 @@
     ON lot.category_id = category.id
     WHERE lot.id = $id";
 
-    $current_lot = get_string($database, $sql_lot);
+    $current_lot = get_result($database, $sql_lot,0);
     return $current_lot;
   }
 
@@ -173,25 +156,6 @@
       ON user.id = bet.user_id
       WHERE lot_id = $id";
 
-    $bets = get_array($database, $sql_bet);
+    $bets = get_result($database, $sql_bet,1);
     return $bets;
-  }
-
-/**
-  * кол-во ставок для каждого лота
-  *
-  * @param bool $database подключение к базе данных
-  * @return array $bets масси ставок для текущего лота
-  */
-  function get_col_bets($database, $id) {
-    $sql_bet = "SELECT bet.*, user.name as user_name FROM bet
-      JOIN user
-      ON user.id = bet.user_id
-      WHERE lot_id = $id";
-    
-    /** отправляем запрос на чтение данных */
-    $request = mysqli_query($database, $sql_bet);
-
-    $col_bets = mysqli_num_rows($request);
-    return $col_bets;
   }
