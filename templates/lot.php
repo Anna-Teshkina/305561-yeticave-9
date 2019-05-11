@@ -48,7 +48,7 @@
                 <tr class="history__item">
                     <td class="history__name"><?=htmlspecialchars($bet['user_name']);?></td>
                     <td class="history__price"><?=htmlspecialchars(number_format($bet['user_price'], 0, ',', ' '));?> р</td>
-                    <td class="history__time"><?=get_editDate($bet['date'])?></td>
+                    <td class="history__time"><?=get_edit_date($bet['date'])?></td>
                 </tr>
             <?php endforeach; ?>
         </table>

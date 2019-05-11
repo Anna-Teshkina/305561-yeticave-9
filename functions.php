@@ -5,7 +5,7 @@
   * @param int $number исходное число
   * @return string $number строка, которая состоит из отформатированного исходного числа с добавлением знака рубля
   */
-  function get_editNumber($number) {
+  function get_edit_number($number) {
     $number = ceil($number);
     $number = number_format($number, 0, ',', ' ');
     $number.= ' ₽';
@@ -18,7 +18,7 @@
   * @param timestamp $date
   * @return timestamp $date дата в корректном формате
   */
-  function get_editDate($date) {
+  function get_edit_date($date) {
     $date_unix = strtotime($date);
     //print("date_unix: $date_unix <br>");
     $date_left_unix = time() - strtotime($date);
@@ -72,7 +72,7 @@
   * @param bool $flag (1 - преобразует полученные данные в массив, 0 - преобразует полученные данные в строку)
   * @return array/string $result
   */
-  function get_result($database, $query, $flag) {
+  function get_result($database, $query, $flag = true) {
     /** отправляем запрос на чтение данных */
     $request = mysqli_query($database, $query);
     
@@ -110,7 +110,7 @@
     ORDER BY $order_by 
     LIMIT $limit;";
 
-    $sql_lot = get_result($database, $sql_lot,1);
+    $sql_lot = get_result($database, $sql_lot);
     return $sql_lot;
   }
 
@@ -122,7 +122,7 @@
   */
   function get_category_list($database) {
     $sql_category = "SELECT * FROM category";
-    $sql_category = get_result($database, $sql_category,1);
+    $sql_category = get_result($database, $sql_category);
     return $sql_category;
   }
 
@@ -132,7 +132,7 @@
   * @param bool $database подключение к базе данных
   * @return string $current_lot текущий лот
   */
-  function get_current_lot($database, $id) {
+  function get_lot_by_id($database, $id) {
     $sql_lot = "SELECT lot.id, lot.name as lot_name, lot.description, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
     JOIN bet
     ON lot.id = bet.lot_id
@@ -150,12 +150,12 @@
   * @param bool $database подключение к базе данных
   * @return array $bets масси ставок для текущего лота
   */
-  function get_current_bets($database, $id) {
+  function get_bets_by_id($database, $id) {
     $sql_bet = "SELECT bet.*, user.name as user_name FROM bet
       JOIN user
       ON user.id = bet.user_id
       WHERE lot_id = $id";
 
-    $bets = get_result($database, $sql_bet,1);
+    $bets = get_result($database, $sql_bet);
     return $bets;
   }
