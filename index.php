@@ -4,18 +4,7 @@ date_default_timezone_get("Europe/Moscow");
 require_once('helpers.php'); // подключаем модуль со вспомогательными функциями
 // require_once('data.php'); // подключаем модуль с переменными
 require_once('functions.php'); // подключаем модуль с функциями
-
-//выполним подключение к базе данных
-$con = mysqli_connect("localhost", "root", "","yeticave");
-
-if (!$con) {
-    print("Ошибка подключения: " . mysqli_connect_error());
-    exit();
-} 
-
-//print("Соединение установлено");
-// устанавливаем кодировку utf8
-mysqli_set_charset($con, "utf8");
+require_once('connect_db.php'); //выполним подключение к базе данных
 
 $is_auth = rand(0, 1);
 $user_name = 'Анна Тёшкина'; // укажите здесь ваше имя

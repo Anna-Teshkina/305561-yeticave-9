@@ -43,7 +43,7 @@
     </div>
 </header>
 
-<main class="container">
+<main class="<?php if ($title =='Главная') { print("container");} ?>">
     <?=$content?>
 </main>
 </div>
