@@ -14,27 +14,23 @@ $user_name = 'Анна Тёшкина'; // укажите здесь ваше и
 $equipment_type = get_category_list($con);
 
 // сделаем так чтобы при отправке формы заполненные поля не очищались
-$lot['name'] = $_POST['lot'] ?? '';
-$lot['category'] = $_POST['lot[category]'] ?? '';
-$lot['message'] = $_POST['lot[message]'] ?? '';
-//$lot['img'] = $_POST['lot[img]'] ?? '';
-$lot['rate'] = $_POST['lot[rate]'] ?? '';
-$lot['step'] = $_POST['lot[step]'] ?? '';
-$lot['date'] = $_POST['lot[date]'] ?? '';
-$file = $_FILES['file'] ?? '';
+if (!empty($_POST['lot[name]'])) { $lot['name'] = $_POST['lot[name]']; } else { $lot['name'] = ''; }
+if (!empty($_POST['lot[category]'])) { $lot['category'] = $_POST['lot[category]']; } else { $lot['category'] = ''; }
+if (!empty($_POST['lot[message]'])) { $lot['message'] = $_POST['lot[message]']; } else { $lot['message'] = ''; }
+if (!empty($_POST['lot[rate]'])) { $lot['rate'] = $_POST['lot[rate]']; } else { $lot['rate'] = ''; }
+if (!empty($_POST['lot[step]'])) { $lot['step'] = $_POST['lot[step]']; } else { $lot['step'] = ''; }
+if (!empty($_POST['lot[date]'])) { $lot['date'] = $_POST['lot[date]']; } else { $lot['date'] = ''; }
+if (!empty($_FILES['file'])) { $file = $_FILES['file']; } else { $file = ''; }
 
 // проверяем что сценарий был вызван отправкой формы
 // если форма отправлена:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST['lot']; //получим данные из формы
-    //var_dump($lot);
-    //$required = ['lot[name]', 'lot[category]', 'lot[message]', 'lot[img]', 'lot[rate]', 'lot[step]', 'lot[date]'];
 
 	$dict = [
         'lot[name]' => 'наименование лота',
         'lot[category]' => 'категорию',
         'lot[message]' => 'описание лота',
-        //'lot[img]' => 'Изображение лота',
         'lot[rate]' => 'начальную цену',
         'lot[step]' => 'шаг ставки',
         'lot[date]' => 'дату завершения торгов'];
@@ -42,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = []; // массив ошибок
     
     foreach ($lot as $key => $value) {
-        //var_dump($key);
 		if (empty($value)) {
             if ($errors[$key] = 'category') {
                 $errors[$key] = "Выберите ".$dict["lot[category]"];
@@ -51,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $errors[$key] = "Напишите ".$dict["lot[message]"];
             }
             $errors[$key] = "Введите ".$dict["lot[$key]"];
-            //echo "$key |";
         }
     }
 
@@ -64,11 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['rate'] = "Содержимое поля «начальная цена» должно быть числом больше нуля";
     }
 
-    //$lot['date'] = "2019-05-11";
-    // var_dump($lot['date']);
-    // var_dump(is_date_valid($lot['date']));
-    //var_dump(strtotime($lot['date']) - time());
-
     if (!empty($lot['date']) && (!is_date_valid($lot['date']))) {
         $errors['date'] = "Введите данные в верном формате: «ГГГГ-ММ-ДД»";
     }
@@ -79,50 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //var_dump($_FILES['file'] );
     if ($file['name'] != '') {
-        //echo "gg <br>";
         $tmp_name = $_FILES['file']['tmp_name'];
         $path = $_FILES['file']['name'];
         $file_type = mime_content_type($tmp_name);
-
-        // var_dump($tmp_name. "<br>");
-        // var_dump($path . "<br>");
-        // var_dump($file_type);
-        // var_dump($file_type == "image/png");
-        // var_dump($file_type == "image/jpeg");
         
 		if (($file_type != "image/png") && ($file_type != "image/jpeg")) {
-            //echo 'ERROR';
 			$errors['file'] = 'Загрузите картинку в формате PNG, JPEG';
-		} else {
-            // echo "YEP";
-			move_uploaded_file($tmp_name, 'uploads/' . $path);
-            
-           foreach ($equipment_type as $category):
-                if ($category['name'] == $lot['category']) {
-                    $lot['category'] = (integer) $category['id'];
-                }
-            endforeach;
-
-            //var_dump($lot['category']);
-
-            $lot['path'] = '/uploads/'. $path;
-            //$lot['category'] = '15';
-            // формируем SQL запрос на добавление нового лота
-            $sql_lot = 'INSERT INTO lot (date_start, name, description, img, price_start, date_end, bet_step, author_id, category_id) VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
-            $stmt_lot = db_get_prepare_stmt($con, $sql_lot, [$lot['name'], $lot['message'], $lot['path'], $lot['rate'], $lot['date'], $lot['step'], $lot['category']]);
-            $res_lot = mysqli_stmt_execute($stmt_lot);
-
-            $lot_id = mysqli_insert_id($con); //id добавленного лота
-
-            // формируем SQL запрос на добавление данных в массив ставок
-            $sql_bet = 'INSERT INTO bet (date, user_id, user_price, lot_id) VALUES (NOW(), 1, ?, ?)';
-            $stmt_bet = db_get_prepare_stmt($con, $sql_bet, [$lot['rate'], $lot_id]);
-            $res_bet = mysqli_stmt_execute($stmt_bet);
-            
-            //var_dump($stmt);
-            if ($res_lot && $res_bet) {
-                header("Location: lot.php?id=" . $lot_id);
-            }
 		}
 	} else {
 		$errors['file'] = 'Вы не загрузили файл';
@@ -135,7 +86,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'errors' => $errors,
             'dict' => $dict
         ]);
-	}
+	} else {
+        move_uploaded_file($tmp_name, 'uploads/' . $path);
+        
+        //приведем значение id категории к числу
+        foreach ($equipment_type as $category):
+            if ($category['name'] == $lot['category']) {
+                $lot['category'] = (integer) $category['id'];
+            }
+        endforeach;
+
+        $lot['path'] = '/uploads/'. $path;
+        // формируем SQL запрос на добавление нового лота
+        $res_lot = insert_lot_to_base($con, $lot);
+        $lot_id = mysqli_insert_id($con); //id добавленного лота
+
+        // формируем SQL запрос на добавление данных в массив ставок
+        $res_bet = insert_bet_to_base($con, $lot, $lot_id);
+        
+        //var_dump($stmt);
+        if ($res_lot && $res_bet) {
+            header("Location: lot.php?id=" . $lot_id);
+        }
+    }
 } else {
     // если сценарий вызван не отправкой формы,
     // показываем пустую форму

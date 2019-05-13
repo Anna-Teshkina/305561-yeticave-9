@@ -145,10 +145,10 @@
   }
 
 /**
-  * формируем запрос для получения информации о текущем лоте
+  * формируем запрос для получения массива ставок, текущего лота
   *
   * @param bool $database подключение к базе данных
-  * @return array $bets масси ставок для текущего лота
+  * @return array $bets массив ставок для текущего лота
   */
   function get_bets_by_id($database, $id) {
     $sql_bet = "SELECT bet.*, user.name as user_name FROM bet
@@ -158,4 +158,32 @@
 
     $bets = get_result($database, $sql_bet);
     return $bets;
+  }
+
+/**
+  * формируем запрос на добавление нового лота
+  *
+  * @param bool $database подключение к базе данных
+  * @param array $lot массив данных о текущем лоте
+  * @return bool $result (true - лот успешно добавлен в базу данных, false - что-то пошло не так)
+  */
+  function insert_lot_to_base($database, $lot) {
+    $sql_lot = 'INSERT INTO lot (date_start, name, description, img, price_start, date_end, bet_step, author_id, category_id) VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
+    $stmt_lot = db_get_prepare_stmt($database, $sql_lot, [$lot['name'], $lot['message'], $lot['path'], $lot['rate'], $lot['date'], $lot['step'], $lot['category']]);
+    $result = mysqli_stmt_execute($stmt_lot);
+    return $result;
+  }
+
+  /**
+  * формируем запрос на добавление нового лота
+  *
+  * @param bool $database подключение к базе данных
+  * @param array $lot массив данных о текущем лоте
+  * @return bool $result (true - лот успешно добавлен в базу данных, false - что-то пошло не так)
+  */
+  function insert_bet_to_base($database, $lot, $id) {
+    $sql_bet = 'INSERT INTO bet (date, user_id, user_price, lot_id) VALUES (NOW(), 1, ?, ?)';
+    $stmt_bet = db_get_prepare_stmt($database, $sql_bet, [$lot['rate'], $id]);
+    $result = mysqli_stmt_execute($stmt_bet);
+    return $result;
   }
