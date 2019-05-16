@@ -25,8 +25,10 @@
         </div>
         <div class="lot-item__cost-state">
             <div class="lot-item__rate">
-            <span class="lot-item__amount">Текущая цена</span>
-            <span class="lot-item__cost"> <?=htmlspecialchars(number_format($ad['user_price'], 0, ',', ' '))?> </span>
+                <span class="lot-item__amount">Текущая цена</span>
+                <span class="lot-item__cost">
+                    <?=htmlspecialchars(number_format(get_max_element($ad['price_start'],$bets, 'user_price'),0, ',', ' '));?> p
+                </span>
             </div>
             <div class="lot-item__min-cost">
             Мин. ставка <span> <?=htmlspecialchars(number_format($ad['price_start'],0, ',', ' '))?> р</span>
