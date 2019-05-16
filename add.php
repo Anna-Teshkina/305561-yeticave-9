@@ -14,28 +14,29 @@ $user_name = 'Анна Тёшкина'; // укажите здесь ваше и
 $equipment_type = get_category_list($con);
 
 // сделаем так чтобы при отправке формы заполненные поля не очищались
-if (!empty($_POST['lot[name]'])) { $lot['name'] = $_POST['lot[name]']; } else { $lot['name'] = ''; }
-if (!empty($_POST['lot[category]'])) { $lot['category'] = $_POST['lot[category]']; } else { $lot['category'] = ''; }
-if (!empty($_POST['lot[message]'])) { $lot['message'] = $_POST['lot[message]']; } else { $lot['message'] = ''; }
-if (!empty($_POST['lot[rate]'])) { $lot['rate'] = $_POST['lot[rate]']; } else { $lot['rate'] = ''; }
-if (!empty($_POST['lot[step]'])) { $lot['step'] = $_POST['lot[step]']; } else { $lot['step'] = ''; }
-if (!empty($_POST['lot[date]'])) { $lot['date'] = $_POST['lot[date]']; } else { $lot['date'] = ''; }
-if (!empty($_FILES['file'])) { $file = $_FILES['file']; } else { $file = ''; }
+$lot['name'] = $_POST['lot'] ?? '';
+$lot['category'] = $_POST['lot[category]'] ?? '';
+$lot['message'] = $_POST['lot[message]'] ?? '';
+$lot['rate'] = $_POST['lot[rate]'] ?? '';
+$lot['step'] = $_POST['lot[step]'] ?? '';
+$lot['date'] = $_POST['lot[date]'] ?? '';
+$file = $_FILES['file'] ?? '';
+
+$dict = []; //словарь, если сценарий вызван не отправкой формы, то словарь пуст
+$errors = []; // массив ошибок
 
 // проверяем что сценарий был вызван отправкой формы
 // если форма отправлена:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST['lot']; //получим данные из формы
 
-	$dict = [
+    $dict = [
         'lot[name]' => 'наименование лота',
         'lot[category]' => 'категорию',
         'lot[message]' => 'описание лота',
         'lot[rate]' => 'начальную цену',
         'lot[step]' => 'шаг ставки',
         'lot[date]' => 'дату завершения торгов'];
-
-    $errors = []; // массив ошибок
     
     foreach ($lot as $key => $value) {
 		if (empty($value)) {
@@ -78,45 +79,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$errors['file'] = 'Вы не загрузили файл';
 	}
+    //var_dump($lot);
+    if (!count($errors)) {
+		move_uploaded_file($tmp_name, 'uploads/' . $path);
 
-    if (count($errors)) {
-		$page_content = include_template('add.php', [
-            'equipment_type' => $equipment_type,
-            'lot' => $lot,
-            'errors' => $errors,
-            'dict' => $dict
-        ]);
-	} else {
-        move_uploaded_file($tmp_name, 'uploads/' . $path);
-        
-        //приведем значение id категории к числу
-        foreach ($equipment_type as $category):
-            if ($category['name'] == $lot['category']) {
-                $lot['category'] = (integer) $category['id'];
-            }
-        endforeach;
-
+        $lot['category'] = (integer) $lot['category'];
         $lot['path'] = '/uploads/'. $path;
-        // формируем SQL запрос на добавление нового лота
-        $res_lot = insert_lot_to_base($con, $lot);
-        $lot_id = mysqli_insert_id($con); //id добавленного лота
+
+        // формируем SQL запрос на добавление нового лота и возвращаем id добавленного лота
+        $lot_id = insert_lot_to_base($con, $lot);
 
         // формируем SQL запрос на добавление данных в массив ставок
-        $res_bet = insert_bet_to_base($con, $lot, $lot_id);
-        
-        //var_dump($stmt);
-        if ($res_lot && $res_bet) {
-            header("Location: lot.php?id=" . $lot_id);
-        }
+        // $res_bet = insert_bet_to_base($con, $lot, $lot_id);
+
+        header("Location: lot.php?id=" . $lot_id);
     }
-} else {
-    // если сценарий вызван не отправкой формы,
-    // показываем пустую форму
-	$page_content = include_template('add.php', [
-        'equipment_type' => $equipment_type,
-        'lot' => $lot
-    ]);
 }
+
+$page_content = include_template('add.php', [
+    'equipment_type' => $equipment_type,
+    'lot' => $lot,
+    'errors' => $errors,
+    'dict' => $dict
+]);
 
 $layout_content = include_template('layout.php', [
 	'content' => $page_content,

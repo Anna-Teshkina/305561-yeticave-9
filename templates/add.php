@@ -22,7 +22,7 @@
           <select id="category" name="lot[category]">
             <option value="">Выберите категорию</option>
             <?php foreach ($equipment_type as $category): ?>
-                <option <? if ($category['name'] == $lot['category']) { print("selected"); } ?>> <?=$category['name'];?> </option>
+                <option <? if ($category['name'] == $lot['category']) { print("selected"); } ?> value="<?=$category['id'];?>"> <?=$category['name'];?> </option>
             <?php endforeach; ?>
           </select>
           <span class="form__error"><?=$errors['category']?></span>

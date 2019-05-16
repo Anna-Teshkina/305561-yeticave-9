@@ -64,6 +64,25 @@
   }
 
 /**
+ * получим максимальное значение в ассоциативном массиве по ключу
+ * 
+ * @param int $min_max_value - исходное (минимальное) значение максимума
+ * @param array $array - массив ставок
+ * @param string $key - ключ
+ * @return int $max - максимальный элемент
+ */
+  function get_max_element($min_max_value, $array, $key) {
+    $max = (integer) $min_max_value;
+    foreach ($array as $elem) {
+        $elem = (integer) $elem[$key];
+        if ($elem > $max) {
+            $max = $elem;
+        }
+    }
+    return $max;
+  }
+
+/**
   * функция отправляет запрос на чтение в базу данных и 
   * преобразует полученные данные
   *
@@ -133,9 +152,7 @@
   * @return string $current_lot текущий лот
   */
   function get_lot_by_id($database, $id) {
-    $sql_lot = "SELECT lot.id, lot.name as lot_name, lot.description, price_start, img, date_end, category_id, bet.user_price, category.name as cat_name FROM lot
-    JOIN bet
-    ON lot.id = bet.lot_id
+    $sql_lot = "SELECT lot.id, lot.name as lot_name, lot.description, price_start, img, date_end, category_id, category.name as cat_name FROM lot
     JOIN category
     ON lot.category_id = category.id
     WHERE lot.id = $id";
@@ -161,17 +178,18 @@
   }
 
 /**
-  * формируем запрос на добавление нового лота
+  * формируем запрос на добавление нового лота и возвращает id добавленного лота
   *
   * @param bool $database подключение к базе данных
   * @param array $lot массив данных о текущем лоте
-  * @return bool $result (true - лот успешно добавлен в базу данных, false - что-то пошло не так)
+  * @return int $lot_id id добавленного лота
   */
   function insert_lot_to_base($database, $lot) {
     $sql_lot = 'INSERT INTO lot (date_start, name, description, img, price_start, date_end, bet_step, author_id, category_id) VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
     $stmt_lot = db_get_prepare_stmt($database, $sql_lot, [$lot['name'], $lot['message'], $lot['path'], $lot['rate'], $lot['date'], $lot['step'], $lot['category']]);
-    $result = mysqli_stmt_execute($stmt_lot);
-    return $result;
+    $status_lot = mysqli_stmt_execute($stmt_lot); //(true - лот успешно добавлен в базу данных, false - что-то пошло не так)
+    $lot_id = mysqli_insert_id($database);
+    return $lot_id;
   }
 
   /**
@@ -181,9 +199,9 @@
   * @param array $lot массив данных о текущем лоте
   * @return bool $result (true - лот успешно добавлен в базу данных, false - что-то пошло не так)
   */
-  function insert_bet_to_base($database, $lot, $id) {
-    $sql_bet = 'INSERT INTO bet (date, user_id, user_price, lot_id) VALUES (NOW(), 1, ?, ?)';
-    $stmt_bet = db_get_prepare_stmt($database, $sql_bet, [$lot['rate'], $id]);
-    $result = mysqli_stmt_execute($stmt_bet);
-    return $result;
-  }
+  // function insert_bet_to_base($database, $lot, $id) {
+  //   $sql_bet = 'INSERT INTO bet (date, user_id, user_price, lot_id) VALUES (NOW(), 1, ?, ?)';
+  //   $stmt_bet = db_get_prepare_stmt($database, $sql_bet, [$lot['rate'], $id]);
+  //   $result = mysqli_stmt_execute($stmt_bet);
+  //   return $result;
+  // }
