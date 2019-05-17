@@ -192,6 +192,35 @@
     return $lot_id;
   }
 
+/**
+  * запрос на поиск записи в таблице пользователей по переданному email
+  * если записи обнаружены возвращаем кол-во обнаруженных записей
+  *
+  * @param bool $database подключение к базе данных
+  * @param string $email
+  * @return int $rows кол-во записей
+  */
+  function get_user_by_email($database, $email) {
+    $sql = "SELECT id FROM user WHERE email = '$email'";
+    $result = mysqli_query($database, $sql);
+    $rows = mysqli_num_rows($result);
+    return $rows;
+  }
+
+/**
+  * формируем запрос на добавление нового пользователя в БД
+  *
+  * @param bool $database подключение к базе данных
+  * @param array $lot массив данных о текущем лоте
+  * @return int $lot_id id добавленного лота
+  */
+  function insert_user_to_base($database, $user, $password) {
+    $sql = 'INSERT INTO user (registration_date, email, name, password) VALUES (NOW(), ?, ?, ?)'; // добавим нового пользователя в БД
+    $stmt = db_get_prepare_stmt($database, $sql, [$user['email'], $user['name'], $password]);
+    $status = mysqli_stmt_execute($stmt); //(true - данные пользователя успешно добавлены в базу данных, false - что-то пошло не так)
+    return $status;
+  }  
+
   /**
   * формируем запрос на добавление нового лота
   *

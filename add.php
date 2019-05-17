@@ -14,7 +14,7 @@ $user_name = 'Анна Тёшкина'; // укажите здесь ваше и
 $equipment_type = get_category_list($con);
 
 // сделаем так чтобы при отправке формы заполненные поля не очищались
-$lot['name'] = $_POST['lot'] ?? '';
+$lot['name'] = $_POST['lot[name]'] ?? '';
 $lot['category'] = $_POST['lot[category]'] ?? '';
 $lot['message'] = $_POST['lot[message]'] ?? '';
 $lot['rate'] = $_POST['lot[rate]'] ?? '';
@@ -80,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$errors['file'] = 'Вы не загрузили файл';
 	}
     //var_dump($lot);
-    if (!count($errors)) {
+    // если массив ошибок пуст
+    if (empty($errors)) {
 		move_uploaded_file($tmp_name, 'uploads/' . $path);
 
         $lot['category'] = (integer) $lot['category'];
@@ -89,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // формируем SQL запрос на добавление нового лота и возвращаем id добавленного лота
         $lot_id = insert_lot_to_base($con, $lot);
 
-        // формируем SQL запрос на добавление данных в массив ставок
-        // $res_bet = insert_bet_to_base($con, $lot, $lot_id);
-
-        header("Location: lot.php?id=" . $lot_id);
+        if ($lot_id) {
+            header("Location: lot.php?id=" . $lot_id);
+            exit();
+        }        
     }
 }
 
