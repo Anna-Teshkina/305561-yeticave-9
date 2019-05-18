@@ -11,3 +11,4 @@ if (!$con) {
 
 // устанавливаем кодировку utf8
 mysqli_set_charset($con, "utf8");
+session_start();

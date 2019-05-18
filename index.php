@@ -6,8 +6,8 @@ require_once('helpers.php'); // подключаем модуль со вспо�
 require_once('functions.php'); // подключаем модуль с функциями
 require_once('connect_db.php'); //выполним подключение к базе данных
 
-$is_auth = rand(0, 1);
-$user_name = 'Анна Тёшкина'; // укажите здесь ваше имя
+// $is_auth = rand(0, 1);
+// $user_name = 'Анна Тёшкина'; // укажите здесь ваше имя
 
 // выполнение запросов::
 
@@ -29,8 +29,8 @@ $page_content = include_template('index.php', [
 $layout_content = include_template('layout.php', [
 	'content' => $page_content,
     'title' => 'Главная',
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
+    // 'is_auth' => $is_auth,
+    // 'user_name' => $user_name,
     'equipment_type' => $equipment_type
 ]); 
 

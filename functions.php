@@ -201,10 +201,11 @@
   * @return int $rows кол-во записей
   */
   function get_user_by_email($database, $email) {
-    $sql = "SELECT id FROM user WHERE email = '$email'";
-    $result = mysqli_query($database, $sql);
-    $rows = mysqli_num_rows($result);
-    return $rows;
+    $sql = "SELECT * FROM user WHERE email = '$email'";
+    //$result = mysqli_query($database, $sql);
+    $user = get_result($database, $sql, false);
+    //$rows = mysqli_num_rows($result);
+    return $user;
   }
 
 /**
@@ -215,8 +216,8 @@
   * @return int $lot_id id добавленного лота
   */
   function insert_user_to_base($database, $user, $password) {
-    $sql = 'INSERT INTO user (registration_date, email, name, password) VALUES (NOW(), ?, ?, ?)'; // добавим нового пользователя в БД
-    $stmt = db_get_prepare_stmt($database, $sql, [$user['email'], $user['name'], $password]);
+    $sql = 'INSERT INTO user (registration_date, email, name, password, contacts) VALUES (NOW(), ?, ?, ?, ?)'; // добавим нового пользователя в БД
+    $stmt = db_get_prepare_stmt($database, $sql, [$user['email'], $user['name'], $password, $user['message']]);
     $status = mysqli_stmt_execute($stmt); //(true - данные пользователя успешно добавлены в базу данных, false - что-то пошло не так)
     return $status;
   }  

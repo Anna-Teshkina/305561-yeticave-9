@@ -43,8 +43,8 @@ if (!empty($ad)) {
 $layout_content = include_template('layout.php', [
 	'content' => $page_content,
     'title' => 'Страница лота',
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
+    // 'is_auth' => $is_auth,
+    // 'user_name' => $user_name,
     'equipment_type' => $equipment_type
 ]); 
 

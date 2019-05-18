@@ -6,12 +6,14 @@ require_once('helpers.php'); // подключаем модуль со вспо�
 require_once('functions.php'); // подключаем модуль с функциями
 require_once('connect_db.php'); //выполним подключение к базе данных
 
-$is_auth = rand(0, 1);
-$user_name = 'Анна Тёшкина'; // укажите здесь ваше имя
+// $is_auth = rand(0, 1);
+// $user_name = 'Анна Тёшкина'; // укажите здесь ваше имя
 
 // формируем запрос для получения списка категорий
 // -------------------------------------------------------------------------------------
 $equipment_type = get_category_list($con);
+
+
 
 // сделаем так чтобы при отправке формы заполненные поля не очищались
 $lot['name'] = $_POST['lot[name]'] ?? '';
@@ -104,11 +106,18 @@ $page_content = include_template('add.php', [
     'dict' => $dict
 ]);
 
+if (!isset($_SESSION['user'])){
+    http_response_code(403);
+    $page_content = include_template('403.php', [
+        'equipment_type' => $equipment_type
+    ]);
+}
+
 $layout_content = include_template('layout.php', [
 	'content' => $page_content,
     'title' => 'Добавление лота',
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
+    // 'is_auth' => $is_auth,
+    // 'user_name' => $user_name,
     'equipment_type' => $equipment_type
 ]); 
 
